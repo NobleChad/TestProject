@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace TestProject.Models
 {
@@ -7,8 +6,11 @@ namespace TestProject.Models
     {
         [Key]
         public int ID { get; set; }
+        [Required(ErrorMessage = "*Required Field")]
         public string Name { get; set; }
+        [Required(ErrorMessage = "*Required Field")]
         public int Price { get; set; }
+        [Required(ErrorMessage = "*Required Field")]
         public int Amount { get; set; }
         
     }

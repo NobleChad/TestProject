@@ -1,84 +1,87 @@
-﻿@model List<Item>
+﻿@model ItemViewModel
 @{
     ViewData["Title"] = "Products";
 }
-<h1>@ViewData["Title"]</h1>
+<style>
+    th {
+        cursor: pointer;
+    }
+
+    .unselectable {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+</style>
+<div class="row pt-4">
+    <div class="col-6">
+        <h2 class="text-primary">Products</h2>
+    </div>
+    @if (Model.Role == "Admin")
+    {
+    <div class="col-6 text-end">
+        <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
+            Add
+        </a>
+    </div>
+    }
+</div>
 
 <table class="table table-bordered table-striped" style="width:100%" id="myTable2">
     <thread>
         <tr>
-            <th onclick="sortTable(0)" class="unselectable">
-                Имя
-
+            <th class="unselectable">
+                Name
             </th>
-            <th onclick="sortTable(0)" class="unselectable">
-                Фамилия
+            <th class="unselectable">
+                Price
             </th>
-            <th onclick="sortTable(0)" class="unselectable">
-                Возраст
+            <th class="unselectable">
+                Amount
             </th>
+            @if (Model.Role == "Admin")
+            {
+                <th class="unselectable">
+                    Delete/Edit
+            </th>
+            }
         </tr>
     </thread>
     <tbody>
-        @foreach (var obj in Model)
+        @foreach (var obj in Model.Items)
         {
             <tr>
                 <td width="10%">
                     @obj.Name
                 </td>
                 <td width="10%">
-                    @obj.Price
+                    @obj.Price$
                 </td>
                 <td width="10%">
                     @obj.Amount
+                </td>
+                @if (Model.Role == "Admin")
+                {
+                    <td width="10%">
+                        <div class="w-75 btn-group" role="group">
+                            <a asp-controller="Product" asp-action="Edit" class="btn btn-primary" asp-route-id="@obj.ID">
+                                Edit
+                            </a>
+                        </div>
+                        <div class="w-75 btn-group" role="group">
+                            <a asp-controller="Product" asp-action="Delete" class="btn btn-danger" asp-route-id="@obj.ID">
+                                Delete
+                            </a>
+                        </div>
+                </td>
+                }
             </tr>
         }
     </tbody>
 </table>
 
 <script>
-    function sortTable(n) {
-        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-        table = document.getElementById("myTable2");
-        switching = true;
-        dir = "asc";
-        while (switching) {
-            switching = false;
-            rows = table.rows;
-            for (i = 1; i < (rows.length - 1); i++) {
-                shouldSwitch = false;
-                x = rows[i].getElementsByTagName("TD")[n];
-                y = rows[i + 1].getElementsByTagName("TD")[n];
-                if (dir == "asc") {
-                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                    if (Number(x.innerHTML) > Number(y.innerHTML)) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                } else if (dir == "desc") {
-                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                    if (Number(x.innerHTML) < Number(y.innerHTML)) {
-                        shouldSwitch = true;
-                        break;
-                    }
-                }
-            }
-            if (shouldSwitch) {
-                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
-                switching = true;
-                switchcount++;
-            } else {
-                if (switchcount == 0 && dir == "asc") {
-                    dir = "desc";
-                    switching = true;
-                }
-            }
-        }
-    }
+   
 </script>
