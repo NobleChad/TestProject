@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using TestProject.Data;
 using TestProject.Models;
 
@@ -18,8 +19,11 @@ namespace TestProject.Controllers
             _userManager = userManager;
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        [Route("~/Product")]
+        [Route("~/Product/GetAll{pageNumber:int:min(1)}")]
+        public async Task<IActionResult> GetAllAsync(int? pageNumber)
         {
+
             var user = await _userManager.GetUserAsync(User);
             var roles = await _userManager.GetRolesAsync(user);
 
@@ -37,22 +41,25 @@ namespace TestProject.Controllers
                     throw new Exception("User with this role doesnt exist");
             }
 
+            IQueryable<Item> students;
+            int pageSize = 5;
+            students = from s in _dbContext.Items select s;
+
+
             var model = new ItemViewModel
             {
-                Items = items,
-                Role = _role
+                Role = _role,
+                Paginations = await PaginatedList<Item>.CreateAsync(students.AsNoTracking(), pageNumber ?? 1, pageSize)
             };
             return View(model);
         }
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        [ValidateAntiForgeryToken]
         public IActionResult Create() {
             return View();
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public IActionResult Create(Item item)
         {
             _dbContext.Add(item);
