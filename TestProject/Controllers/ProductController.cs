@@ -26,30 +26,12 @@ namespace TestProject.Controllers
 
             var user = await _userManager.GetUserAsync(User);
             var roles = await _userManager.GetRolesAsync(user);
-
-            List<Item> items = _dbContext.Items.ToList();
-
-            switch (roles.FirstOrDefault())
-            {
-                case "Admin":
-                    _role = "Admin";
-                    break;
-                case "User":
-                    _role = "User";
-                    break;
-                default:
-                    throw new Exception("User with this role doesnt exist");
-            }
-
-            IQueryable<Item> students;
-            int pageSize = 5;
-            students = from s in _dbContext.Items select s;
-
-
+            IQueryable<Item> items = from s in _dbContext.Items select s;
+			int pageSize = 3;
             var model = new ItemViewModel
             {
-                Role = _role,
-                Paginations = await PaginatedList<Item>.CreateAsync(students.AsNoTracking(), pageNumber ?? 1, pageSize)
+                Role = roles.FirstOrDefault() ?? throw new Exception("User with this role doesnt exist"),
+                Paginations = await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), pageNumber ?? 1, pageSize)
             };
             return View(model);
         }
