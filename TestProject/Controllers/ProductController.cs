@@ -114,5 +114,11 @@ namespace TestProject.Controllers
             _dbContext.SaveChanges();
             return RedirectToAction("GetAll");
         }
+        public IActionResult AboutApi()
+        {
+            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files/AboutApi.txt");
+            var fileContent = System.IO.File.ReadAllText(filePath);
+            return View("AboutApi", fileContent);
+        }
     }
 }
