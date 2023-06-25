@@ -117,19 +117,24 @@ namespace TestProject.Areas.Identity.Pages.Account.Manage
             if (Input.NewEmail != email)
             {
                 var userId = await _userManager.GetUserIdAsync(user);
-                var code = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
-                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+                var token = await _userManager.GenerateChangeEmailTokenAsync(user, Input.NewEmail);
+                var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+
                 var callbackUrl = Url.Page(
                     "/Account/ConfirmEmailChange",
                     pageHandler: null,
-                    values: new { area = "Identity", userId = userId, email = Input.NewEmail, code = code },
+                    values: new { area = "Identity", userId = userId, email = Input.NewEmail, token = encodedToken },
                     protocol: Request.Scheme);
+
+                await _userManager.ChangeEmailAsync(user, Input.NewEmail, token);
+
                 await _emailSender.SendEmailAsync(
                     Input.NewEmail,
                     "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    $"Please confirm your email change by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
+                StatusMessage = "Your email was successfully changed!";
                 return RedirectToPage();
             }
 
@@ -137,36 +142,6 @@ namespace TestProject.Areas.Identity.Pages.Account.Manage
             return RedirectToPage();
         }
 
-        public async Task<IActionResult> OnPostSendVerificationEmailAsync()
-        {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
-            {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
-            }
 
-            if (!ModelState.IsValid)
-            {
-                await LoadAsync(user);
-                return Page();
-            }
-
-            var userId = await _userManager.GetUserIdAsync(user);
-            var email = await _userManager.GetEmailAsync(user);
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-            var callbackUrl = Url.Page(
-                "/Account/ConfirmEmail",
-                pageHandler: null,
-                values: new { area = "Identity", userId = userId, code = code },
-                protocol: Request.Scheme);
-            await _emailSender.SendEmailAsync(
-                email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
-            StatusMessage = "Verification email sent. Please check your email.";
-            return RedirectToPage();
-        }
     }
 }
