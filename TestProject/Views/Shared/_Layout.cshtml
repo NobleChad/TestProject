@@ -1,5 +1,10 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿<style>
+    li {
+        list-style-type: none;
+    }
+</style>
+<!DOCTYPE html>
+<html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,6 +12,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TestProject.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lipis/flag-icons@6.6.6/css/flag-icons.min.css" asp-append-version="true" />
 </head>
 <body>
     <header>
@@ -21,12 +27,19 @@
                     <ul class="navbar-nav flex-grow-1">
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-controller="Product" asp-action="GetAll">Products</a>
+                            <a class="nav-link" asp-controller="Product" asp-action="GetAll">@Localizer["Products"]</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-controller="Product" asp-action="AboutApi">API</a>
                         </li>
                     </ul>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">@Thread.CurrentThread.CurrentCulture.Name</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="/Lang?culture=en"><span class="fi fi-us fis"></span> en</a>
+                            <a class="dropdown-item" href="/Lang?culture=uk"><span class="fi fi-ua fis"></span> uk</a>
+                        </div>
+                    </li>
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -40,7 +53,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - TestProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - TestProject - <a asp-area="" asp-controller="Home" asp-action="Privacy">@Localizer["Privacy"]</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -17,13 +17,13 @@
 </style>
 <div class="row pt-4">
     <div class="col-6">
-        <h2 class="text-primary">Products</h2>
+        <h2 class="text-primary">@Localizer["Products"]</h2>
     </div>
     @if (Model.Role == "Admin")
     {
     <div class="col-6 text-end">
         <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
-            Add
+                @Localizer["Add"]
         </a>
     </div>
     }
@@ -33,18 +33,18 @@
     <thread>
         <tr>
             <th class="unselectable">
-                Name
+                @Localizer["Name"]
             </th>
             <th class="unselectable">
-                Price
+                @Localizer["Price"]
             </th>
             <th class="unselectable">
-                Amount
+                @Localizer["Amount"]
             </th>
             @if (Model.Role == "Admin")
             {
                 <th class="unselectable">
-                    Delete/Edit
+                    @Localizer["Delete/Edit"]
             </th>
             }
         </tr>
@@ -67,12 +67,12 @@
                     <td width="10%">
                         <div class="w-75 btn-group" role="group">
                             <a asp-controller="Product" asp-action="Edit" class="btn btn-primary" asp-route-id="@obj.ID">
-                                Edit
+                                @Localizer["Edit"]
                             </a>
                         </div>
                         <div class="w-75 btn-group" role="group">
                             <a asp-controller="Product" asp-action="Delete" class="btn btn-danger" asp-route-id="@obj.ID">
-                                Delete
+                                @Localizer["Delete"]
                             </a>
                         </div>
                 </td>

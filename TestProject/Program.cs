@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Build.Framework;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 using TestProject.Data;
 using TestProject.Services;
 
@@ -20,9 +22,19 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
     .AddDefaultTokenProviders();
 builder.Services.AddScoped<IFileService, FileService>();
 builder.Services.AddControllersWithViews();
-builder.Services.AddControllers();
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.AddRazorPages()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
+    .AddDataAnnotationsLocalization();
+
+
 
 var app = builder.Build();
+var supportedCultures = new[] { "en", "uk" };
+var localizationOptions = new RequestLocalizationOptions().SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+app.UseRequestLocalization(localizationOptions);
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

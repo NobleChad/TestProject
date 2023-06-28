@@ -1,0 +1,29 @@
+Щоб використовувати API, відкрийте PowerShell (або будь-яку іншу програму для тестування API) і запишіть одну з цих команд (і не забудьте 
+замість підкреслення написати порт):
+
+GET:
+Invoke-RestMethod https://localhost:___/api/tasks -Method GET
+
+GET BY ID:
+Invoke-RestMethod https://localhost:___/api/tasks/1 -Method GET
+
+CREATE:
+$body = @{
+    Title = "New Task"
+    Description = "This is a new task"
+    IsCompleted = $false
+} | ConvertTo-Json
+
+Invoke-RestMethod https://localhost:___/api/tasks -Method Post -Body $body -ContentType "application/json"
+
+UPDATE:
+$body = @{
+    Title = "Updated Task"
+    Description = "This task has been updated"
+    IsCompleted = $true
+} | ConvertTo-Json
+
+Invoke-RestMethod https://localhost:___/api/tasks/1 -Method Put -Body $body -ContentType "application/json"
+
+DELETE:
+Invoke-RestMethod https://localhost:___/api/tasks -Method DELETE

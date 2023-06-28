@@ -98,7 +98,19 @@ namespace TestProject.Controllers
         }
         public IActionResult AboutApi()
         {
-            var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files/AboutApi.txt");
+            string filePath;
+            switch (Thread.CurrentThread.CurrentCulture.Name)
+            {
+                case "en":
+                    filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files/AboutApi-en.txt");
+                    break;
+                case "uk":
+                    filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files/AboutApi-uk.txt");
+                    break;
+                default:
+                    filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files/AboutApi-en.txt");
+                    break;
+            }
             var fileContent = System.IO.File.ReadAllText(filePath);
             return View("AboutApi", fileContent);
         }
