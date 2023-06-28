@@ -126,10 +126,10 @@
   <data name="Products" xml:space="preserve">
     <value>Продукти</value>
   </data>
-  <data name="UA" xml:space="preserve">
+  <data name="ua" xml:space="preserve">
     <value>Українська</value>
   </data>
-  <data name="US" xml:space="preserve">
+  <data name="us" xml:space="preserve">
     <value>Англійська</value>
   </data>
 </root>

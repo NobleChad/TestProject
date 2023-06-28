@@ -26,7 +26,13 @@ builder.Services.AddLocalization(options => options.ResourcesPath = "Resources")
 builder.Services.AddRazorPages()
     .AddViewLocalization(LanguageViewLocationExpanderFormat.Suffix)
     .AddDataAnnotationsLocalization();
+var cultureValues = new Dictionary<string, string>
+{
+    { "en", "us" },
+    { "uk", "ua" }
+};
 
+builder.Services.AddSingleton(cultureValues);
 
 
 var app = builder.Build();
