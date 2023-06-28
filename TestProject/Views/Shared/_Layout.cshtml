@@ -34,10 +34,18 @@
                         </li>
                     </ul>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">@Thread.CurrentThread.CurrentCulture.Name</a>
+                        @switch  (Thread.CurrentThread.CurrentCulture.Name)
+                        {
+                        case "en":
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><span class="fi fi-us fis"></span></a>
+                                break;
+                            case "uk":
+                                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false"><span class="fi fi-ua fis"></span></a>
+                                break;
+                        }
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="/Lang?culture=en"><span class="fi fi-us fis"></span> en</a>
-                            <a class="dropdown-item" href="/Lang?culture=uk"><span class="fi fi-ua fis"></span> uk</a>
+                            <a class="dropdown-item" href="/Lang?culture=en"><span class="fi fi-us fis"></span> @Localizer["US"]</a>
+                            <a class="dropdown-item" href="/Lang?culture=uk"><span class="fi fi-ua fis"></span> @Localizer["UA"]</a>
                         </div>
                     </li>
                     <partial name="_LoginPartial" />
