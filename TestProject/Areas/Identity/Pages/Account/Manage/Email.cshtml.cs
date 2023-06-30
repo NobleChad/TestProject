@@ -12,12 +12,14 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.Extensions.Localization;
 using TestProject.Data;
 
 namespace TestProject.Areas.Identity.Pages.Account.Manage
 {
     public class EmailModel : PageModel
     {
+        private readonly IStringLocalizer<EmailModel> _localizer;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
@@ -25,11 +27,13 @@ namespace TestProject.Areas.Identity.Pages.Account.Manage
         public EmailModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            IStringLocalizer<EmailModel> localizer)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _localizer = localizer;
         }
 
         /// <summary>
@@ -92,7 +96,7 @@ namespace TestProject.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"{_localizer["UError"]} '{_userManager.GetUserId(User)}'.");
             }
 
             await LoadAsync(user);
@@ -104,7 +108,7 @@ namespace TestProject.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"{_localizer["UError"]} '{_userManager.GetUserId(User)}'.");
             }
 
             if (!ModelState.IsValid)
@@ -134,11 +138,11 @@ namespace TestProject.Areas.Identity.Pages.Account.Manage
                     "Confirm your email",
                     $"Please confirm your email change by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
-                StatusMessage = "Your email was successfully changed!";
+                StatusMessage = _localizer["Success"];
                 return RedirectToPage();
             }
 
-            StatusMessage = "Your email is unchanged.";
+            StatusMessage = _localizer["Same"];
             return RedirectToPage();
         }
 

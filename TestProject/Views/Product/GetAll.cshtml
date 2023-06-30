@@ -15,22 +15,29 @@
         user-select: none;
     }
 </style>
+
 <div class="row pt-4">
     <div class="col-6">
         <h2 class="text-primary">@Localizer["Products"]</h2>
     </div>
     @if (Model.Role == "Admin")
     {
-    <div class="col-6 text-end">
-        <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
+        <div class="col-6 text-end">
+            <a asp-controller="Product" asp-action="Create" class="btn btn-primary">
                 @Localizer["Add"]
-        </a>
-    </div>
+            </a>
+        </div>
     }
 </div>
 
+<div class="row pt-4">
+    <div class="col-6">
+        @await Component.InvokeAsync("Currency")
+    </div>
+</div>
+
 <table class="table table-bordered table-striped" style="width:100%" id="myTable2">
-    <thread>
+    <thead>
         <tr>
             <th class="unselectable">
                 @Localizer["Name"]
@@ -45,10 +52,10 @@
             {
                 <th class="unselectable">
                     @Localizer["Delete/Edit"]
-            </th>
+                </th>
             }
         </tr>
-    </thread>
+    </thead>
     <tbody>
         @foreach (var obj in Model.Paginations)
         {
@@ -57,7 +64,7 @@
                     @obj.Name
                 </td>
                 <td width="10%">
-                    @obj.Price$
+                    <span class="price-amount">@obj.Price$</span>
                 </td>
                 <td width="10%">
                     @obj.Amount
@@ -75,7 +82,7 @@
                                 @Localizer["Delete"]
                             </a>
                         </div>
-                </td>
+                    </td>
                 }
             </tr>
         }
