@@ -48,6 +48,7 @@ namespace TestProject.Controllers
             _dbContext.SaveChanges();
             return RedirectToAction("GetAll");
         }
+        [Authorize(Roles = "Admin")]
         public IActionResult Edit(int? id)
         {
             if (id == null || id == 0)
@@ -66,6 +67,7 @@ namespace TestProject.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Item obj)
         {
@@ -77,7 +79,7 @@ namespace TestProject.Controllers
             }
             return View(obj);
         }
-
+        [Authorize(Roles = "Admin")]
         public IActionResult Delete(int? id)
         {
             var ItemFromDb = _dbContext.Items.Find(id);
@@ -87,7 +89,7 @@ namespace TestProject.Controllers
             }
             return View(ItemFromDb);
         }
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public IActionResult Delete(Item obj)
         {
@@ -98,21 +100,9 @@ namespace TestProject.Controllers
         }
         public IActionResult AboutApi()
         {
-            string filePath;
-            switch (Thread.CurrentThread.CurrentCulture.Name)
-            {
-                case "en":
-                    filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files/AboutApi-en.txt");
-                    break;
-                case "uk":
-                    filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files/AboutApi-uk.txt");
-                    break;
-                default:
-                    filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/files/AboutApi-en.txt");
-                    break;
-            }
+            string filePath = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/files/AboutApi-{Thread.CurrentThread.CurrentCulture.Name}.txt");
             var fileContent = System.IO.File.ReadAllText(filePath);
-            return View("AboutApi", fileContent);
+            return View(fileContent);
         }
     }
 }

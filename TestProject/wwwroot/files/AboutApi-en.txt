@@ -1,11 +1,10 @@
-To use API open up PowerShell(or any other program for testing API's) and write down one of this commands(and dont forget to add port instead 
-of underscores):
+To use API open up PowerShell(or any other program for testing API's) and write down one of this commands:
 
 GET:
-Invoke-RestMethod https://localhost:___/api/tasks -Method GET
+Invoke-RestMethod https://localhost:7258/api/tasks -Method GET
 
 GET BY ID:
-Invoke-RestMethod https://localhost:___/api/tasks/1 -Method GET
+Invoke-RestMethod https://localhost:7258/api/tasks/1 -Method GET
 
 CREATE:
 $body = @{
@@ -14,7 +13,7 @@ $body = @{
     IsCompleted = $false
 } | ConvertTo-Json
 
-Invoke-RestMethod https://localhost:___/api/tasks -Method Post -Body $body -ContentType "application/json"
+Invoke-RestMethod https://localhost:7258/api/tasks -Method Post -Body $body -ContentType "application/json"
 
 UPDATE:
 $body = @{
@@ -23,7 +22,7 @@ $body = @{
     IsCompleted = $true
 } | ConvertTo-Json
 
-Invoke-RestMethod https://localhost:___/api/tasks/1 -Method Put -Body $body -ContentType "application/json"
+Invoke-RestMethod https://localhost:7258/api/tasks/1 -Method Put -Body $body -ContentType "application/json"
 
 DELETE:
-Invoke-RestMethod https://localhost:___/api/tasks -Method DELETE
+Invoke-RestMethod https://localhost:7258/api/tasks/1 -Method DELETE
