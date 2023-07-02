@@ -12,15 +12,12 @@ namespace TestProject.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
-        private string _role;
         public ProductController(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
         {
             _dbContext = dbContext;
             _userManager = userManager;
         }
         [HttpGet]
-        [Route("~/Product")]
-        [Route("~/Product/GetAll{pageNumber:int:min(1)}")]
         public async Task<IActionResult> GetAllAsync(int? pageNumber)
         {
 
@@ -102,7 +99,7 @@ namespace TestProject.Controllers
         {
             string filePath = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/files/AboutApi-{Thread.CurrentThread.CurrentCulture.Name}.txt");
             var fileContent = System.IO.File.ReadAllText(filePath);
-            return View(fileContent);
+            return View("AboutApi",fileContent);
         }
     }
 }
