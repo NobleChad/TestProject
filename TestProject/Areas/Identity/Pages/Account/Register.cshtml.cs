@@ -165,33 +165,6 @@ namespace TestProject.Areas.Identity.Pages.Account
             // If we got this far, something failed, redisplay form
             return Page();
         }
-        //private async Task<bool> SendEmailAsync(string email,string subject, string confirmLink) 
-        //{
-        //    //TODO
-        //    //INSERT YOUR OWN MAIL SERVER CREDENTIALS
-        //    // message.From = ?
-        //    // message.Port = ?
-        //    // message.Host = ?
-        //    // smtpClient.Credentials = new NetworkCredential(?Username,?Password);
-        //        //MailMessage message = new MailMessage();
-        //        //SmtpClient smtpClient = new SmtpClient();
-        //        //message.From = new MailAddress("testprojectbotlulsich@gmail.com");
-        //        //message.To.Add(email);
-        //        //message.Subject = subject;
-        //        //message.IsBodyHtml = true;
-        //        //message.Body = confirmLink;
-
-        //        //smtpClient.Port = 587;
-        //        //smtpClient.Host = "smtp.gmail.com";
-
-
-        //        //smtpClient.EnableSsl = true;
-        //        //smtpClient.UseDefaultCredentials = false;
-        //        //smtpClient.Credentials = new NetworkCredential("testprojectbotlulsich@gmail.com", "DASsader321$");
-        //        //smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-        //        //smtpClient.Send(message);
-        //        //return true;
-        //    }
 
         private ApplicationUser CreateUser()
         {
