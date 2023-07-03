@@ -17,6 +17,7 @@ namespace TestProject.Controllers
             _dbContext = dbContext;
             _userManager = userManager;
         }
+        
         [HttpGet]
         public async Task<IActionResult> GetAllAsync(int? pageNumber)
         {

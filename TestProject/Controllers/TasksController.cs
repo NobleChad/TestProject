@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TestProject.Models;
 
 namespace TestProject.Controllers
@@ -13,15 +14,19 @@ namespace TestProject.Controllers
         {
             _tasks = TaskDataGenerator.GenerateTasks();
         }
-        
-        // GET api/tasks
+
+        ///<summary> 
+        ///API to get all tasks
+        ///</summary>
         [HttpGet]
         public ActionResult<IEnumerable<ApiTask>> GetTasks()
         {
             return _tasks;
         }
 
-        // GET api/tasks/1
+        ///<summary> 
+        ///API to get task by id
+        ///</summary>
         [HttpGet("{id}")]
         public ActionResult<ApiTask> GetTaskById(int id)
         {
@@ -34,7 +39,9 @@ namespace TestProject.Controllers
             return task;
         }
 
-        // POST api/tasks
+        ///<summary> 
+        ///API to create new task
+        ///</summary>
         [HttpPost]
         public ActionResult<ApiTask> CreateTask([FromBody] ApiTask task)
         {
@@ -43,7 +50,9 @@ namespace TestProject.Controllers
             return CreatedAtAction(nameof(GetTaskById), new { id = task.Id }, task);
         }
 
-        // PUT api/tasks/1
+        ///<summary> 
+        ///API to edit existing task
+        ///</summary>
         [HttpPut("{id}")]
         public IActionResult UpdateTask(int id,[FromBody] ApiTask updatedTask)
         {
@@ -59,7 +68,9 @@ namespace TestProject.Controllers
             return NoContent();
         }
 
-        // DELETE api/tasks/1
+        ///<summary> 
+        ///API to delete task by id
+        ///</summary>
         [HttpDelete("{id}")]
         public IActionResult DeleteTask(int id)
         {
