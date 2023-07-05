@@ -19,17 +19,17 @@ namespace TestProject.Controllers
         }
         
         [HttpGet]
+        //Too complex logic here, need to make a separate class or service
         public async Task<IActionResult> GetAllAsync(int? pageNumber)
         {
 
             var user = await _userManager.GetUserAsync(User);
             var roles = await _userManager.GetRolesAsync(user);
             IQueryable<Item> items = from s in _dbContext.Items select s;
-			int pageSize = 3;
             var model = new ItemViewModel
             {
                 Role = roles.FirstOrDefault() ?? throw new Exception("User with this role doesnt exist"),
-                Paginations = await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), pageNumber ?? 1, pageSize)
+                Paginations = await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), pageNumber ?? 1, 3)
             };
             return View(model);
         }
