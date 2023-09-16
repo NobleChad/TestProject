@@ -13,7 +13,7 @@ This middleware redirects to NotFound.cshtml if the website encounters 404 excep
 # Swagger page
 This page contains default swagger documentation.
 
-# Home/Privacy/API pages
+# Home/Privacy pages
 Those pages do not have any particular use, but at least they are translated.
 
 # Product page
