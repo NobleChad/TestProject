@@ -121,6 +121,6 @@
     <value>Welcome to my TestProject website!</value>
   </data>
   <data name="welcome1" xml:space="preserve">
-    <value>In order to see the content of «Products» and «API» tabs you need to login or register.</value>
+    <value>In order to see the content of «Products» tab you need to login or register.</value>
   </data>
 </root>

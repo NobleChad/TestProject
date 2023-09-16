@@ -19,7 +19,7 @@ namespace TestProject.Services
 
         public async Task<ItemViewModel> GetItemsAsync(ClaimsPrincipal user, int? pageNumber)
         {
-            var currentUser = await _userManager.GetUserAsync(user);
+            var currentUser = await _userManager.GetUserAsync(user) ?? throw new Exception("User with this role doesn't exist");
             var roles = await _userManager.GetRolesAsync(currentUser);
             IQueryable<Item> items = from s in _dbContext.Items select s;
             var paginatedItems = await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), pageNumber ?? 1, 3);

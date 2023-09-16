@@ -83,7 +83,11 @@ namespace TestProject.Controllers
         public IActionResult Delete(Item obj)
         {
             var ItemFromDb = _dbContext.Items.Find(obj.ID);
-            _dbContext.Items.Remove(ItemFromDb);
+			if(ItemFromDb == null)
+			{
+				return NotFound();
+			}
+			_dbContext.Items.Remove(ItemFromDb);
             _dbContext.SaveChanges();
             return RedirectToAction("GetAll");
         }
