@@ -246,7 +246,7 @@ namespace TestProject.Data.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Items");
+                    b.ToTable("Items", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

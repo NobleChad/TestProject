@@ -34,4 +34,9 @@
     <Folder Include="wwwroot\Uploads\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\ts\Index.js" />
+    <None Include="wwwroot\ts\Index.ts" />
+  </ItemGroup>
+
 </Project>

@@ -47,6 +47,7 @@ builder.Services.AddSwaggerGen(s =>
 //Miscellaneous
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();

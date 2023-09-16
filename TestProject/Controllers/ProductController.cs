@@ -1,36 +1,27 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using TestProject.Data;
 using TestProject.Models;
+using TestProject.Services;
 
 namespace TestProject.Controllers
 {
     [Authorize(Roles = "Admin,User")]
     public class ProductController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _dbContext;
-        public ProductController(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager)
+        private readonly IProductService _productService;
+        public ProductController(ApplicationDbContext dbContext, IProductService productService)
         {
             _dbContext = dbContext;
-            _userManager = userManager;
+            _productService = productService;
         }
-        
+
         [HttpGet]
-        //Too complex logic here, need to make a separate class or service
         public async Task<IActionResult> GetAllAsync(int? pageNumber)
         {
-
-            var user = await _userManager.GetUserAsync(User);
-            var roles = await _userManager.GetRolesAsync(user);
-            IQueryable<Item> items = from s in _dbContext.Items select s;
-            var model = new ItemViewModel
-            {
-                Role = roles.FirstOrDefault() ?? throw new Exception("User with this role doesnt exist"),
-                Paginations = await PaginatedList<Item>.CreateAsync(items.AsNoTracking(), pageNumber ?? 1, 3)
-            };
+            var model = await _productService.GetItemsAsync(User, pageNumber);
             return View(model);
         }
         [Authorize(Roles = "Admin")]
@@ -95,12 +86,6 @@ namespace TestProject.Controllers
             _dbContext.Items.Remove(ItemFromDb);
             _dbContext.SaveChanges();
             return RedirectToAction("GetAll");
-        }
-        public IActionResult AboutApi()
-        {
-            string filePath = Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/files/AboutApi-{Thread.CurrentThread.CurrentCulture.Name}.txt");
-            var fileContent = System.IO.File.ReadAllText(filePath);
-            return View("AboutApi",fileContent);
         }
     }
 }

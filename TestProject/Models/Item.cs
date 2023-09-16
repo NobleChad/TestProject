@@ -12,6 +12,6 @@ namespace TestProject.Models
         public int Price { get; set; }
         [Required(ErrorMessage = "*Required Field")]
         public int Amount { get; set; }
-        
+
     }
 }
