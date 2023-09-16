@@ -5,7 +5,7 @@ There are 2 roles on this site - User and Admin.
 User - can view the Products/API/Swagger pages, but cannot change anything in Products (Even if the User clicks on the link to create a table, he will see Access Denied).
 Admin - can do everything User can, but he can also edit the Products table.
 
-This website also has English and Ukrainian translations(I tried to translate everything but I surely missed something(should have used deepL API)).
+This website also has English and Ukrainian translations(I tried to translate everything but I surely missed something).
 
 # MiddleWare
 This middleware redirects to NotFound.cshtml if the website encounters 404 exception.
