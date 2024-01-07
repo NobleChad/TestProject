@@ -1,10 +1,9 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TestProject.Models;
 
 namespace TestProject.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class TasksController : ControllerBase
     {
@@ -18,7 +17,7 @@ namespace TestProject.Controllers
         ///<summary> 
         ///API to get all tasks
         ///</summary>
-        [HttpGet]
+        [HttpGet("GetTasks")]
         public ActionResult<IEnumerable<ApiTask>> GetTasks()
         {
             return _tasks;
@@ -27,7 +26,7 @@ namespace TestProject.Controllers
         ///<summary> 
         ///API to get task by id
         ///</summary>
-        [HttpGet("{id}")]
+        [HttpGet("GetTaskById/{id}")]
         public ActionResult<ApiTask> GetTaskById(int id)
         {
             var task = _tasks.FirstOrDefault(t => t.Id == id);
@@ -42,8 +41,8 @@ namespace TestProject.Controllers
         ///<summary> 
         ///API to create new task
         ///</summary>
-        [HttpPost]
-        public ActionResult<ApiTask> CreateTask([FromBody] ApiTask task)
+        [HttpPost("CreateTask")]
+        public ActionResult<ApiTask> CreateTask(ApiTask task)
         {
             task.Id = _tasks.Max(t => t.Id) + 1;
             _tasks.Add(task);
@@ -53,8 +52,8 @@ namespace TestProject.Controllers
         ///<summary> 
         ///API to edit existing task
         ///</summary>
-        [HttpPut("{id}")]
-        public IActionResult UpdateTask(int id,[FromBody] ApiTask updatedTask)
+        [HttpPut("UpdateTask/{id}")]
+        public ActionResult<ApiTask> UpdateTask(int id, [FromBody] ApiTask updatedTask)
         {
             var task = _tasks.FirstOrDefault(t => t.Id == id);
             if (task == null)
@@ -65,13 +64,13 @@ namespace TestProject.Controllers
             task.Title = updatedTask.Title;
             task.Description = updatedTask.Description;
             task.IsCompleted = updatedTask.IsCompleted;
-            return NoContent();
+            return task;
         }
 
         ///<summary> 
         ///API to delete task by id
         ///</summary>
-        [HttpDelete("{id}")]
+        [HttpDelete("DeleteTask/{id}")]
         public IActionResult DeleteTask(int id)
         {
             var task = _tasks.FirstOrDefault(t => t.Id == id);
