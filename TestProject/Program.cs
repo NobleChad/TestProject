@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using TestProject.Data;
+using TestProject.Models;
 using TestProject.Services;
 
 public class Program
@@ -14,10 +15,10 @@ public class Program
 
         //Database connections
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-        builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        builder.Services.AddDbContext<IDataRepository>(options =>
             options.UseSqlServer(connectionString));
         builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
-            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddEntityFrameworkStores<IDataRepository>()
             .AddDefaultUI()
             .AddDefaultTokenProviders();
 
@@ -52,6 +53,8 @@ public class Program
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
         builder.Services.AddScoped<IFileService, FileService>();
         builder.Services.AddScoped<IProductService, ProductService>();
+        builder.Services.AddScoped<IDataRepository<Item>, ItemsRepository>();
+        builder.Services.AddScoped<IDataService<Item>, ItemsService>();
         builder.Services.AddControllersWithViews();
 
         var app = builder.Build();

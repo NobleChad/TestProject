@@ -9,11 +9,11 @@ namespace TestProject.Controllers
     [Authorize(Roles = "Admin,User")]
     public class ProductController : Controller
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly IDataService<Item> _repo;
         private readonly IProductService _productService;
-        public ProductController(ApplicationDbContext dbContext, IProductService productService)
+        public ProductController(IDataService<Item> repo, IProductService productService)
         {
-            _dbContext = dbContext;
+            _repo = repo;
             _productService = productService;
         }
 
@@ -32,19 +32,17 @@ namespace TestProject.Controllers
         [HttpPost]
         public IActionResult Create(Item item)
         {
-            _dbContext.Add(item);
-            _dbContext.SaveChanges();
+            _repo.CreateItem(item);
             return RedirectToAction("GetAll");
         }
         [Authorize(Roles = "Admin")]
-        public IActionResult Edit(int? id)
+        public IActionResult Edit(int id)
         {
             if (id == null || id == 0)
             {
                 return NotFound();
             }
-            var ItemFromDb = _dbContext.Items.Find(id);
-
+            var ItemFromDb = _repo.GetItemById(id);
 
             if (ItemFromDb == null)
             {
@@ -57,20 +55,15 @@ namespace TestProject.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Item obj)
+        public IActionResult Edit(Item item)
         {
-            if (ModelState.IsValid)
-            {
-                _dbContext.Items.Update(obj);
-                _dbContext.SaveChanges();
-                return RedirectToAction("GetAll");
-            }
-            return View(obj);
+            _repo.EditItem(item);
+            return View(item);
         }
         [Authorize(Roles = "Admin")]
-        public IActionResult Delete(int? id)
+        public IActionResult Delete(int id)
         {
-            var ItemFromDb = _dbContext.Items.Find(id);
+            var ItemFromDb = _repo.GetItemById(id);
             if (ItemFromDb == null)
             {
                 return NotFound();
@@ -79,15 +72,9 @@ namespace TestProject.Controllers
         }
         [Authorize(Roles = "Admin")]
         [HttpPost]
-        public IActionResult Delete(Item obj)
+        public IActionResult Delete(Item item)
         {
-            var ItemFromDb = _dbContext.Items.Find(obj.ID);
-			if(ItemFromDb == null)
-			{
-				return NotFound();
-			}
-			_dbContext.Items.Remove(ItemFromDb);
-            _dbContext.SaveChanges();
+            _repo.Delete(item);
             return RedirectToAction("GetAll");
         }
     }

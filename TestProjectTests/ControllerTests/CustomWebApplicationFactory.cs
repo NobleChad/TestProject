@@ -8,7 +8,7 @@ namespace TestProjectTests.ControllerTests
 {
     public class CustomWebApplicationFactory : WebApplicationFactory<Program>
     {
-        public Mock<ApplicationDbContext> _context = new(new DbContextOptions<ApplicationDbContext>());
+        public Mock<IDataRepository> _context = new(new DbContextOptions<IDataRepository>());
         public Mock<IProductService> _fileService = new();
     }
 }

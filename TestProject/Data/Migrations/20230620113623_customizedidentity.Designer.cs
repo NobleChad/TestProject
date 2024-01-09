@@ -11,7 +11,7 @@ using TestProject.Data;
 
 namespace TestProject.Data.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(IDataRepository))]
     [Migration("20230620113623_customizedidentity")]
     partial class customizedidentity
     {
