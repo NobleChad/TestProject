@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Email" xml:space="preserve">
+    <value>Електрона пошта</value>
+  </data>
   <data name="Name" xml:space="preserve">
     <value>Ім'я</value>
   </data>
@@ -131,8 +134,5 @@
   </data>
   <data name="Title" xml:space="preserve">
     <value>Профіль</value>
-  </data>
-  <data name="Username" xml:space="preserve">
-    <value>Ім'я користувача.</value>
   </data>
 </root>
