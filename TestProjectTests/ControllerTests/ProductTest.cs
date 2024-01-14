@@ -11,7 +11,7 @@ namespace TestProjectTests.ControllerTests
         private CustomWebApplicationFactory _factory;
         private HttpClient _client;
 
-        public ProductTest(IDataRepository context)
+        public ProductTest(ApplicationDbContext context)
         {
             _factory = new CustomWebApplicationFactory();
             _client = _factory.CreateClient();

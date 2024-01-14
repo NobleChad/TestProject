@@ -4,9 +4,9 @@ using TestProject.Models;
 
 namespace TestProject.Data
 {
-    public class IDataRepository : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public IDataRepository(DbContextOptions<IDataRepository> options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }

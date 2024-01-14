@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TestProject.Data;
 using TestProject.Models;
 using TestProject.Services;
 

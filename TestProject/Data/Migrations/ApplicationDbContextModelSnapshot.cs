@@ -10,7 +10,7 @@ using TestProject.Data;
 
 namespace TestProject.Data.Migrations
 {
-    [DbContext(typeof(IDataRepository))]
+    [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

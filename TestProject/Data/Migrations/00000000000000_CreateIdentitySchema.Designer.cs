@@ -9,7 +9,7 @@ using TestProject.Data;
 
 namespace TestProject.Data.Migrations
 {
-    [DbContext(typeof(IDataRepository))]
+    [DbContext(typeof(ApplicationDbContext))]
     [Migration("00000000000000_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {

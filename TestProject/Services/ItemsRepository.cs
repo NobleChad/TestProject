@@ -6,8 +6,8 @@ namespace TestProject.Services
 {
     public class ItemsRepository : IDataRepository<Item>
     {
-        public IDataRepository _context;
-        public ItemsRepository(IDataRepository context)
+        public ApplicationDbContext _context;
+        public ItemsRepository(ApplicationDbContext context)
         {
             _context = context;
         }
