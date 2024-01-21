@@ -23,7 +23,7 @@ dotnet restore
 dotnet ef database update
 ```
 ## Run the Application
-Open Visual Studio and run the app.The default path should be C:\Users\USER_NAME\TestProject. Enjoy!
+Open Visual Studio and run the app. The default path should be C:\Users\USER_NAME\TestProject. Enjoy!
 
 # Information about the web application
 ## Main functions
