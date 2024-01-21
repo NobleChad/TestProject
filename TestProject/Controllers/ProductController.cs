@@ -60,8 +60,8 @@ namespace TestProject.Controllers
         public IActionResult Edit(Item item)
         {
             _repo.EditItem(item);
-            return View(item);
-        }
+			return RedirectToAction("GetAll");
+		}
         [Authorize(Roles = "Admin")]
         public IActionResult Delete(int id)
         {

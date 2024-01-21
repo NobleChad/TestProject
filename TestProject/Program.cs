@@ -84,13 +84,8 @@ public class Program
         app.UseRouting();
         app.UseAuthorization();
         app.MapRazorPages();
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
 
-        });
-
-        app.MapControllerRoute(
+		app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
