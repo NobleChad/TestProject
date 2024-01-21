@@ -51,9 +51,9 @@
             {
                 var wwwPath = this.environment.WebRootPath;
                 var path = Path.Combine(wwwPath, "Uploads\\", imageFileName);
-                if (System.IO.File.Exists(path))
+                if (File.Exists(path))
                 {
-                    System.IO.File.Delete(path);
+                    File.Delete(path);
                     return true;
                 }
                 return false;

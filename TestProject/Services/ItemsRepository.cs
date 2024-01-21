@@ -12,14 +12,18 @@ namespace TestProject.Services
             _context = context;
         }
 
-        public DbSet<Item> GetAll()
+		public IQueryable<Item> GetAll()
+		{
+			return _context.Items;
+		}
+		public IQueryable<Item> GetAll(Func<DbSet<Item>, IQueryable<Item>> func)
         {
             var items = _context.Items;
-            return items;
-        }
+            return func(items);
+		}
         public Item GetById(int id)
         {
-            var item = _context.Items.Find(id) ?? throw new Exception("The item doesn't exist");
+            var item = _context.Items.Find(id) ?? new Item { Name = "Item with this ID doesnt exist"};
             return item;
         }
 

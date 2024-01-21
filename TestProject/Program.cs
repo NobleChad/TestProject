@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using TestProject.Data;
@@ -47,7 +48,8 @@ public class Program
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             s.IncludeXmlComments(xmlPath);
-        });
+			s.EnableAnnotations();
+		});
 
         //Miscellaneous
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();

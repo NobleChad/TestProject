@@ -1,4 +1,5 @@
-﻿using TestProject.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using TestProject.Models;
 
 namespace TestProject.Services
 {
@@ -9,10 +10,16 @@ namespace TestProject.Services
         {
             _rep = rep;
         }
-
-        public List<Item> GetAllItems()
+		public IQueryable<Item> GetAllItems()
+		{
+			return _rep.GetAll();
+		}
+		///<summary> 
+		///method to get all items
+		///</summary>
+		public IQueryable<Item> GetAllItems(Func<DbSet<Item>, IQueryable<Item>> func)
         {
-            return _rep.GetAll().ToList();
+            return _rep.GetAll(func);
         }
         public Item GetItemById(int id)
         {

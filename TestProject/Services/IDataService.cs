@@ -1,4 +1,5 @@
-﻿using TestProject.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using TestProject.Models;
 
 namespace TestProject.Services
 {
@@ -7,7 +8,8 @@ namespace TestProject.Services
         T CreateItem(T item);
         void Delete(T item);
         T EditItem(T item);
-        List<T> GetAllItems();
-        T GetItemById(int id);
+        IQueryable<T> GetAllItems(Func<DbSet<T>, IQueryable<T>> func);
+		IQueryable<T> GetAllItems();
+		T GetItemById(int id);
     }
 }

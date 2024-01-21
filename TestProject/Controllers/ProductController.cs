@@ -17,7 +17,10 @@ namespace TestProject.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync(int? pageNumber)
+		[Route("~/Product")]
+		[Route("~/Product/GetAll{pageNumber:int:min(1)}")]
+		[ApiExplorerSettings(IgnoreApi = true)]
+		public async Task<IActionResult> GetAllAsync(int? pageNumber)
         {
             var model = await _productService.GetItemsAsync(User, pageNumber);
             return View(model);
@@ -37,7 +40,7 @@ namespace TestProject.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult Edit(int id)
         {
-            if (id == null || id == 0)
+            if (id == 0)
             {
                 return NotFound();
             }

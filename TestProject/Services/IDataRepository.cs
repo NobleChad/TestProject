@@ -8,7 +8,8 @@ namespace TestProject.Services
         T Create(T item);
         void Delete(T item);
         T Edit(T item);
-        DbSet<T> GetAll();
-        T GetById(int id);
+		IQueryable<T> GetAll(Func<DbSet<T>, IQueryable<T>> func);
+		IQueryable<T> GetAll();
+		T GetById(int id);
     }
 }

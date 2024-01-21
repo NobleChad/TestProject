@@ -36,7 +36,7 @@
                     <li class="nav-item dropdown">
                         @{
                             var cultureValues = Context.RequestServices.GetService<Dictionary<string, string>>();
-                            var currentCulture = Thread.CurrentThread.CurrentCulture.Name;
+                            var currentCulture = Thread.CurrentThread.CurrentCulture.Name ?? "en";
                             var currentCultureValue = cultureValues.ContainsKey(currentCulture) ? cultureValues[currentCulture] : string.Empty;
                         }
                         <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">@currentCulture</a>
