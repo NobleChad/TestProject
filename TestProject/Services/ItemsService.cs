@@ -21,7 +21,7 @@ namespace TestProject.Services
         {
             return _rep.GetAll(func);
         }
-        public Item GetItemById(int id)
+        public Item? GetItemById(int id)
         {
             return _rep.GetById(id);
         }
@@ -31,14 +31,14 @@ namespace TestProject.Services
             return _rep.Create(item);
         }
 
-        public Item EditItem(Item item)
+        public Item? EditItem(Item item)
         {
             return _rep.Edit(item);
         }
 
-        public void Delete(Item item)
+        public Item? Delete(int id)
         {
-            _rep.Delete(item);
+           return _rep.Delete(id);
         }
     }
 }

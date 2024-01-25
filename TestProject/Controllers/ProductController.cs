@@ -76,7 +76,7 @@ namespace TestProject.Controllers
         [HttpPost]
         public IActionResult Delete(Item item)
         {
-            _repo.Delete(item);
+            _repo.Delete(item.ID);
             return RedirectToAction("GetAll");
         }
     }

@@ -21,9 +21,9 @@ namespace TestProject.Services
             var items = _context.Items;
             return func(items);
 		}
-        public Item GetById(int id)
+        public Item? GetById(int id)
         {
-            var item = _context.Items.Find(id) ?? new Item { Name = "Item with this ID doesnt exist"};
+            var item = _context.Items.Find(id);
             return item;
         }
 
@@ -34,17 +34,25 @@ namespace TestProject.Services
             return item;
         }
 
-        public Item Edit(Item item)
+        public Item? Edit(Item item)
         {
+            if (_context.Items.Find(item.ID) == null) {
+                return null;
+            }
             _context.Items.Update(item);
             _context.SaveChanges();
             return item;
         }
 
-        public void Delete(Item item)
+        public Item? Delete(int id)
         {
-            _context.Items.Remove(item);
-            _context.SaveChanges();
-        }
+            var result = _context.Items.Find(id);
+			if (result == null) {
+                return null;
+			}
+			_context.Items.Remove(result);
+			_context.SaveChanges();
+			return result;
+		}
     }
 }

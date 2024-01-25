@@ -6,10 +6,10 @@ namespace TestProject.Services
     public interface IDataService<T> where T : class
     {
         T CreateItem(T item);
-        void Delete(T item);
-        T EditItem(T item);
+        T? Delete(int id);
+        T? EditItem(T item);
         IQueryable<T> GetAllItems(Func<DbSet<T>, IQueryable<T>> func);
 		IQueryable<T> GetAllItems();
-		T GetItemById(int id);
+		T? GetItemById(int id);
     }
 }

@@ -1,0 +1,168 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Moq;
+using Newtonsoft.Json;
+using System.Net.Http.Json;
+using TestProject.Models;
+
+namespace TestProjectTests.ControllerTests
+{
+	public class ApiTest : IDisposable
+	{
+		private CustomWebApplicationFactory _factory;
+		private HttpClient _client;
+		List<Item> mockItems = new(){
+		new Item { ID = 1,Name="Test1", Price = 100, Amount = 100},
+		new Item { ID = 2,Name="Test2sadasdsa", Price = 200, Amount = 200},
+		new Item { ID = 3,Name="Test3sadasdads", Price = 300, Amount = 300}
+	};
+
+		public ApiTest()
+		{
+			_factory = new CustomWebApplicationFactory();
+			_client = _factory.CreateClient();
+		}
+		[Fact]
+		public async Task Get_Items_Check_Success()
+		{
+			//Arrange
+			_factory._fileService.Setup(x => x.GetAllItems()).Returns(mockItems.AsQueryable());
+
+			//Act
+			var response = await _client.GetAsync("/api/GetItems");
+			var result = JsonConvert.DeserializeObject<List<Item>>(await response.Content.ReadAsStringAsync());
+
+			//Assert
+			response.EnsureSuccessStatusCode();
+			Assert.Collection(result!,
+				r => {
+					Assert.Equal(1, r.ID);
+					Assert.Equal("Test1", r.Name);
+					Assert.Equal(100, r.Price);
+					Assert.Equal(100, r.Amount);
+				},
+				r => {
+					Assert.Equal(2, r.ID);
+					Assert.Equal("Test2sadasdsa", r.Name);
+					Assert.Equal(200, r.Price);
+					Assert.Equal(200, r.Amount);
+				},
+				r => {
+					Assert.Equal(3, r.ID);
+					Assert.Equal("Test3sadasdads", r.Name);
+					Assert.Equal(300, r.Price);
+					Assert.Equal(300, r.Amount);
+				}
+				);
+
+		}
+		[Fact]
+		public async Task Get_Item_By_Id_Check_Success()
+		{
+			//Arrange
+			_factory._fileService.Setup(x => x.GetItemById(1)).Returns(mockItems.First());
+
+			//Act
+			var response = await _client.GetAsync("/api/GetItemById/1");
+			var result = JsonConvert.DeserializeObject<Item>(await response.Content.ReadAsStringAsync());
+
+			//Assert
+			response.EnsureSuccessStatusCode();
+			Assert.Equal(1, result.ID);
+			Assert.Equal("Test1", result.Name);
+			Assert.Equal(100, result.Price);
+			Assert.Equal(100, result.Amount);
+		}
+		[Fact]
+		public async Task Get_Filtered_Items_Check_Success()
+		{
+			//Arrange
+			Func<DbSet<Item>, IQueryable<Item>> func = a =>
+			{
+				return a.Where(b => b.Name.Length > 5);
+			};
+			_factory._fileService
+				.Setup(x => x.GetAllItems(It.IsAny<Func<DbSet<Item>, IQueryable<Item>>>()))
+				.Returns(mockItems.Where(b => b.Name.Length > 5).AsQueryable());
+
+			//Act
+			var response = await _client.GetAsync("/api/GetFilteredItems");
+			var result = JsonConvert.DeserializeObject<List<Item>>(await response.Content.ReadAsStringAsync());
+
+			//Assert
+			response.EnsureSuccessStatusCode();
+			Assert.Collection(result!,
+				r => {
+					Assert.Equal(2, r.ID);
+					Assert.Equal("Test2sadasdsa", r.Name);
+					Assert.Equal(200, r.Price);
+					Assert.Equal(200, r.Amount);
+				},
+				r => {
+					Assert.Equal(3, r.ID);
+					Assert.Equal("Test3sadasdads", r.Name);
+					Assert.Equal(300, r.Price);
+					Assert.Equal(300, r.Amount);
+				}
+				);
+		}
+		[Fact]
+		public async Task Create_Item_Check_Success()
+		{
+			//Arrange
+			var item = new Item { ID = 4,Name = "Test4", Price = 400, Amount = 400 };
+			_factory._fileService
+				.Setup(x => x.CreateItem(It.Is<Item>(b=>b.ID==item.ID && b.Name ==item.Name && b.Price == item.Price && b.Name == item.Name)))
+				.Returns(item);
+
+			//Acrt
+			var response = await _client.PostAsync("/api/CreateItem", JsonContent.Create(item));
+			var result = JsonConvert.DeserializeObject<Item>(await response.Content.ReadAsStringAsync());
+
+			//Assert
+			response.EnsureSuccessStatusCode();
+			Assert.Equal(4, result.ID);
+			Assert.Equal("Test4", result.Name);
+			Assert.Equal(400, result.Price);
+			Assert.Equal(400, result.Amount);
+		}
+		[Fact]
+		public async Task Update_Item_Check_Success()
+		{
+			//Arrange
+			var item = new Item { ID=3,Name = "Test4", Price = 239882323, Amount = 300 };
+			_factory._fileService
+				.Setup(x => x.EditItem(It.Is<Item>(b => b.ID == item.ID && b.Name == item.Name && b.Price == item.Price && b.Name == item.Name)))
+				.Returns(item);
+
+			//Act
+			var response = await _client.PutAsync("/api/UpdateItem/3", JsonContent.Create(item));
+			var result = JsonConvert.DeserializeObject<Item>(await response.Content.ReadAsStringAsync());
+
+			//Assert
+			response.EnsureSuccessStatusCode();
+			Assert.Equal(3, result.ID);
+			Assert.Equal("Test4", result.Name);
+			Assert.Equal(239882323, result.Price);
+			Assert.Equal(300, result.Amount);
+		}
+		[Fact]
+		public async Task Delete_Item_Check_Success()
+		{
+			//Arrange
+			_factory._fileService.Setup(x => x.Delete(1)).Returns(mockItems.First());
+
+			//Act
+			var response = await _client.DeleteAsync("/api/DeleteItem/1");
+			var result = JsonConvert.DeserializeObject<Item>(await response.Content.ReadAsStringAsync());
+
+			//Assert
+			response.EnsureSuccessStatusCode();
+		}
+
+		public void Dispose()
+		{
+			_factory.Dispose();
+			_client.Dispose();
+		}
+	}
+}
