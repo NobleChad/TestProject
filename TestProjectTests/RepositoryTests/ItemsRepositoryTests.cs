@@ -1,7 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using TestProject.Models;
-using TestProjectTests.TestModels;
 
 namespace TestProjectTests.RepositoryTests
 {
@@ -21,7 +20,7 @@ namespace TestProjectTests.RepositoryTests
 			var items = _factory._repository.GetAll().ToList();
 
 			// Assert
-			Assert.Equal(ItemList.mockItems.Count, items.Count);
+			Assert.Equal(_factory._context.Items.ToList().Count, items.Count);
 		}
 		[Fact]
 		public void GetAllFiltered_ReturnsAllItems()
@@ -35,7 +34,7 @@ namespace TestProjectTests.RepositoryTests
 			var items = _factory._repository.GetAll(func).ToList();
 
 			// Assert
-			Assert.Equal(ItemList.mockItems.Where(b => b.Name.Length > 5).ToList().Count, items.Count);
+			Assert.Equal(_factory._context.Items.Where(b => b.Name.Length > 5).ToList().Count, items.Count);
 		}
 		[Fact]
 		public void GetItemById_ReturnsOneItem()
@@ -44,7 +43,7 @@ namespace TestProjectTests.RepositoryTests
 			int id = 1;
 			// Act
 			var item = _factory._repository.GetById(id);
-			var existingItem = ItemList.mockItems.Find(b => b.ID == id);
+			var existingItem = _factory._context.Items.Find(id);
 			// Assert
 			item.Should().BeEquivalentTo(existingItem);
 		}

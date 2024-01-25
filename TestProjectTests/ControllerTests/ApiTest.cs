@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
@@ -28,47 +29,22 @@ namespace TestProjectTests.ControllerTests
 
 			//Assert
 			response.EnsureSuccessStatusCode();
-			Assert.Collection(result!,
-				r =>
-				{
-					Assert.Equal(1, r.ID);
-					Assert.Equal("Test1", r.Name);
-					Assert.Equal(100, r.Price);
-					Assert.Equal(100, r.Amount);
-				},
-				r =>
-				{
-					Assert.Equal(2, r.ID);
-					Assert.Equal("Test2sadasdsa", r.Name);
-					Assert.Equal(200, r.Price);
-					Assert.Equal(200, r.Amount);
-				},
-				r =>
-				{
-					Assert.Equal(3, r.ID);
-					Assert.Equal("Test3sadasdads", r.Name);
-					Assert.Equal(300, r.Price);
-					Assert.Equal(300, r.Amount);
-				}
-				);
+			result.Should().BeEquivalentTo(ItemList.mockItems);
 
 		}
 		[Fact]
 		public async Task Get_Item_By_Id_Check_Success()
 		{
 			//Arrange
-			_factory._fileService.Setup(x => x.GetItemById(1)).Returns(ItemList.mockItems.First());
+			var item = ItemList.mockItems.First();
+			_factory._fileService.Setup(x => x.GetItemById(1)).Returns(item);
 
 			//Act
 			var response = await _client.GetAsync("/api/GetItemById/1");
 			var result = JsonConvert.DeserializeObject<Item>(await response.Content.ReadAsStringAsync());
 
 			//Assert
-			response.EnsureSuccessStatusCode();
-			Assert.Equal(1, result.ID);
-			Assert.Equal("Test1", result.Name);
-			Assert.Equal(100, result.Price);
-			Assert.Equal(100, result.Amount);
+			result.Should().BeEquivalentTo(item);
 		}
 		[Fact]
 		public async Task Get_Filtered_Items_Check_Success()
@@ -78,9 +54,11 @@ namespace TestProjectTests.ControllerTests
 			{
 				return a.Where(b => b.Name.Length > 5);
 			};
+			var items = ItemList.mockItems.Where(b => b.Name.Length > 5);
+
 			_factory._fileService
 				.Setup(x => x.GetAllItems(It.IsAny<Func<DbSet<Item>, IQueryable<Item>>>()))
-				.Returns(ItemList.mockItems.Where(b => b.Name.Length > 5).AsQueryable());
+				.Returns(items.AsQueryable());
 
 			//Act
 			var response = await _client.GetAsync("/api/GetFilteredItems");
@@ -88,22 +66,7 @@ namespace TestProjectTests.ControllerTests
 
 			//Assert
 			response.EnsureSuccessStatusCode();
-			Assert.Collection(result!,
-				r =>
-				{
-					Assert.Equal(2, r.ID);
-					Assert.Equal("Test2sadasdsa", r.Name);
-					Assert.Equal(200, r.Price);
-					Assert.Equal(200, r.Amount);
-				},
-				r =>
-				{
-					Assert.Equal(3, r.ID);
-					Assert.Equal("Test3sadasdads", r.Name);
-					Assert.Equal(300, r.Price);
-					Assert.Equal(300, r.Amount);
-				}
-				);
+			result.Should().BeEquivalentTo(items);
 		}
 		[Fact]
 		public async Task Create_Item_Check_Success()
@@ -120,10 +83,7 @@ namespace TestProjectTests.ControllerTests
 
 			//Assert
 			response.EnsureSuccessStatusCode();
-			Assert.Equal(4, result.ID);
-			Assert.Equal("Test4", result.Name);
-			Assert.Equal(400, result.Price);
-			Assert.Equal(400, result.Amount);
+			result.Should().BeEquivalentTo(item);
 		}
 		[Fact]
 		public async Task Update_Item_Check_Success()
@@ -140,10 +100,7 @@ namespace TestProjectTests.ControllerTests
 
 			//Assert
 			response.EnsureSuccessStatusCode();
-			Assert.Equal(3, result.ID);
-			Assert.Equal("Test4", result.Name);
-			Assert.Equal(239882323, result.Price);
-			Assert.Equal(300, result.Amount);
+			result.Should().BeEquivalentTo(item);
 		}
 		[Fact]
 		public async Task Delete_Item_Check_Success()
