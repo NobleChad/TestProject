@@ -24,7 +24,7 @@ namespace TestProject.Controllers
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public ActionResult<List<Item>> GetItems()
 		{
-			return _repo.GetAllItems().ToList();
+			return Ok(_repo.GetAllItems().ToList());
 		}
 
 		///<summary> 
@@ -52,7 +52,8 @@ namespace TestProject.Controllers
 		public ActionResult<Item> GetItemById(int id)
 		{
 			var item = _repo.GetItemById(id);
-			if (item != null) {
+			if (item != null)
+			{
 				return item;
 			}
 			return NotFound();
@@ -67,7 +68,8 @@ namespace TestProject.Controllers
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public ActionResult<Item> CreateItem(Item item)
 		{
-			if (ModelState.IsValid) {
+			if (ModelState.IsValid)
+			{
 				return _repo.CreateItem(item);
 			}
 
@@ -85,14 +87,16 @@ namespace TestProject.Controllers
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public ActionResult<Item> UpdateItem(int id, [FromBody] Item item)
 		{
-			if(!ModelState.IsValid) {
+			if (!ModelState.IsValid)
+			{
 				return BadRequest();
 			}
 
 			item.ID = id;
 			var result = _repo.EditItem(item);
 
-			if (result == null) {
+			if (result == null)
+			{
 				return NotFound();
 			}
 			return result;

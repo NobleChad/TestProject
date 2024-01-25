@@ -3,6 +3,7 @@ using Moq;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
 using TestProject.Models;
+using TestProjectTests.TestModels;
 
 namespace TestProjectTests.ControllerTests
 {
@@ -10,12 +11,6 @@ namespace TestProjectTests.ControllerTests
 	{
 		private CustomWebApplicationFactory _factory;
 		private HttpClient _client;
-		List<Item> mockItems = new(){
-		new Item { ID = 1,Name="Test1", Price = 100, Amount = 100},
-		new Item { ID = 2,Name="Test2sadasdsa", Price = 200, Amount = 200},
-		new Item { ID = 3,Name="Test3sadasdads", Price = 300, Amount = 300}
-	};
-
 		public ApiTest()
 		{
 			_factory = new CustomWebApplicationFactory();
@@ -25,7 +20,7 @@ namespace TestProjectTests.ControllerTests
 		public async Task Get_Items_Check_Success()
 		{
 			//Arrange
-			_factory._fileService.Setup(x => x.GetAllItems()).Returns(mockItems.AsQueryable());
+			_factory._fileService.Setup(x => x.GetAllItems()).Returns(ItemList.mockItems.AsQueryable());
 
 			//Act
 			var response = await _client.GetAsync("/api/GetItems");
@@ -34,19 +29,22 @@ namespace TestProjectTests.ControllerTests
 			//Assert
 			response.EnsureSuccessStatusCode();
 			Assert.Collection(result!,
-				r => {
+				r =>
+				{
 					Assert.Equal(1, r.ID);
 					Assert.Equal("Test1", r.Name);
 					Assert.Equal(100, r.Price);
 					Assert.Equal(100, r.Amount);
 				},
-				r => {
+				r =>
+				{
 					Assert.Equal(2, r.ID);
 					Assert.Equal("Test2sadasdsa", r.Name);
 					Assert.Equal(200, r.Price);
 					Assert.Equal(200, r.Amount);
 				},
-				r => {
+				r =>
+				{
 					Assert.Equal(3, r.ID);
 					Assert.Equal("Test3sadasdads", r.Name);
 					Assert.Equal(300, r.Price);
@@ -59,7 +57,7 @@ namespace TestProjectTests.ControllerTests
 		public async Task Get_Item_By_Id_Check_Success()
 		{
 			//Arrange
-			_factory._fileService.Setup(x => x.GetItemById(1)).Returns(mockItems.First());
+			_factory._fileService.Setup(x => x.GetItemById(1)).Returns(ItemList.mockItems.First());
 
 			//Act
 			var response = await _client.GetAsync("/api/GetItemById/1");
@@ -82,7 +80,7 @@ namespace TestProjectTests.ControllerTests
 			};
 			_factory._fileService
 				.Setup(x => x.GetAllItems(It.IsAny<Func<DbSet<Item>, IQueryable<Item>>>()))
-				.Returns(mockItems.Where(b => b.Name.Length > 5).AsQueryable());
+				.Returns(ItemList.mockItems.Where(b => b.Name.Length > 5).AsQueryable());
 
 			//Act
 			var response = await _client.GetAsync("/api/GetFilteredItems");
@@ -91,13 +89,15 @@ namespace TestProjectTests.ControllerTests
 			//Assert
 			response.EnsureSuccessStatusCode();
 			Assert.Collection(result!,
-				r => {
+				r =>
+				{
 					Assert.Equal(2, r.ID);
 					Assert.Equal("Test2sadasdsa", r.Name);
 					Assert.Equal(200, r.Price);
 					Assert.Equal(200, r.Amount);
 				},
-				r => {
+				r =>
+				{
 					Assert.Equal(3, r.ID);
 					Assert.Equal("Test3sadasdads", r.Name);
 					Assert.Equal(300, r.Price);
@@ -109,9 +109,9 @@ namespace TestProjectTests.ControllerTests
 		public async Task Create_Item_Check_Success()
 		{
 			//Arrange
-			var item = new Item { ID = 4,Name = "Test4", Price = 400, Amount = 400 };
+			var item = new Item { ID = 4, Name = "Test4", Price = 400, Amount = 400 };
 			_factory._fileService
-				.Setup(x => x.CreateItem(It.Is<Item>(b=>b.ID==item.ID && b.Name ==item.Name && b.Price == item.Price && b.Name == item.Name)))
+				.Setup(x => x.CreateItem(It.Is<Item>(b => b.ID == item.ID && b.Name == item.Name && b.Price == item.Price && b.Name == item.Name)))
 				.Returns(item);
 
 			//Acrt
@@ -129,7 +129,7 @@ namespace TestProjectTests.ControllerTests
 		public async Task Update_Item_Check_Success()
 		{
 			//Arrange
-			var item = new Item { ID=3,Name = "Test4", Price = 239882323, Amount = 300 };
+			var item = new Item { ID = 3, Name = "Test4", Price = 239882323, Amount = 300 };
 			_factory._fileService
 				.Setup(x => x.EditItem(It.Is<Item>(b => b.ID == item.ID && b.Name == item.Name && b.Price == item.Price && b.Name == item.Name)))
 				.Returns(item);
@@ -149,7 +149,7 @@ namespace TestProjectTests.ControllerTests
 		public async Task Delete_Item_Check_Success()
 		{
 			//Arrange
-			_factory._fileService.Setup(x => x.Delete(1)).Returns(mockItems.First());
+			_factory._fileService.Setup(x => x.Delete(1)).Returns(ItemList.mockItems.First());
 
 			//Act
 			var response = await _client.DeleteAsync("/api/DeleteItem/1");

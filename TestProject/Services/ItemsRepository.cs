@@ -36,13 +36,23 @@ namespace TestProject.Services
 
         public Item? Edit(Item item)
         {
-            if (_context.Items.Find(item.ID) == null) {
-                return null;
-            }
-            _context.Items.Update(item);
-            _context.SaveChanges();
-            return item;
-        }
+			var existingItem = _context.Items.Local.FirstOrDefault(e => e.ID == item.ID);
+			if (existingItem != null)
+			{
+				_context.Entry(existingItem).State = EntityState.Detached;
+			}
+
+			var result = _context.Items.Find(item.ID);
+			if (result == null)
+			{
+				return null;
+			}
+
+			_context.Entry(result).CurrentValues.SetValues(item);
+
+			_context.SaveChanges();
+			return item;
+		}
 
         public Item? Delete(int id)
         {
