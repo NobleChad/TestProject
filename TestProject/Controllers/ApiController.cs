@@ -68,7 +68,7 @@ namespace TestProject.Controllers
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public ActionResult<Item> CreateItem(Item item)
 		{
-			if (ModelState.IsValid)
+			if (ModelState.IsValid && item != null)
 			{
 				return _repo.CreateItem(item);
 			}
@@ -87,7 +87,7 @@ namespace TestProject.Controllers
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public ActionResult<Item> UpdateItem(int id, [FromBody] Item item)
 		{
-			if (!ModelState.IsValid)
+			if (!ModelState.IsValid || item == null)
 			{
 				return BadRequest();
 			}

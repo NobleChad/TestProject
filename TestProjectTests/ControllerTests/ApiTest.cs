@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Newtonsoft.Json;
+using System.Net;
 using System.Net.Http.Json;
 using TestProject.Models;
 using TestProjectTests.TestModels;
@@ -18,7 +19,7 @@ namespace TestProjectTests.ControllerTests
 			_client = _factory.CreateClient();
 		}
 		[Fact]
-		public async Task Get_Items_Check_Success()
+		public async Task Get_Items_Success()
 		{
 			//Arrange
 			_factory._fileService.Setup(x => x.GetAllItems()).Returns(ItemList.mockItems.AsQueryable());
@@ -33,7 +34,7 @@ namespace TestProjectTests.ControllerTests
 
 		}
 		[Fact]
-		public async Task Get_Item_By_Id_Check_Success()
+		public async Task Get_Item_By_Id_Success()
 		{
 			//Arrange
 			var item = ItemList.mockItems.First();
@@ -47,7 +48,21 @@ namespace TestProjectTests.ControllerTests
 			result.Should().BeEquivalentTo(item);
 		}
 		[Fact]
-		public async Task Get_Filtered_Items_Check_Success()
+		public async Task Get_Item_By_Id_NotFound()
+		{
+			//Arrange
+			Item item = null;
+			_factory._fileService.Setup(x => x.GetItemById(1)).Returns(item);
+
+			//Act
+			var response = await _client.GetAsync("/api/GetItemById/1");
+			var result = JsonConvert.DeserializeObject<Item>(await response.Content.ReadAsStringAsync());
+
+			//Assert
+			response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+		}
+		[Fact]
+		public async Task Get_Filtered_Items_Success()
 		{
 			//Arrange
 			Func<DbSet<Item>, IQueryable<Item>> func = a =>
@@ -69,7 +84,7 @@ namespace TestProjectTests.ControllerTests
 			result.Should().BeEquivalentTo(items);
 		}
 		[Fact]
-		public async Task Create_Item_Check_Success()
+		public async Task Create_Item_Success()
 		{
 			//Arrange
 			var item = new Item { ID = 4, Name = "Test4", Price = 400, Amount = 400 };
@@ -86,7 +101,19 @@ namespace TestProjectTests.ControllerTests
 			result.Should().BeEquivalentTo(item);
 		}
 		[Fact]
-		public async Task Update_Item_Check_Success()
+		public async Task Create_Item_BadRequest()
+		{
+			// Arrange
+			Item item = null;
+
+			// Act
+			var response = await _client.PostAsync("/api/CreateItem", JsonContent.Create(item));
+
+			// Assert
+			response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+		}
+		[Fact]
+		public async Task Update_Item_Success()
 		{
 			//Arrange
 			var item = new Item { ID = 3, Name = "Test4", Price = 239882323, Amount = 300 };
@@ -103,7 +130,30 @@ namespace TestProjectTests.ControllerTests
 			result.Should().BeEquivalentTo(item);
 		}
 		[Fact]
-		public async Task Delete_Item_Check_Success()
+		public async Task Update_Item_BadRequest()
+		{
+			//Arrange
+			Item item = null;
+
+			//Act
+			var response = await _client.PutAsync("/api/UpdateItem/123123", JsonContent.Create(item));
+
+			//Assert
+			response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+		}
+		[Fact]
+		public async Task Update_Item_NotFound()
+		{
+			//Arrange
+			Item item = new Item { ID = 123123, Name = "Test4", Price = 239882323, Amount = 300 };
+			//Act
+			var response = await _client.PutAsync("/api/UpdateItem/123123", JsonContent.Create(item));
+
+			//Assert
+			response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+		}
+		[Fact]
+		public async Task Delete_Item_Success()
 		{
 			//Arrange
 			_factory._fileService.Setup(x => x.Delete(1)).Returns(ItemList.mockItems.First());
@@ -114,6 +164,16 @@ namespace TestProjectTests.ControllerTests
 
 			//Assert
 			response.EnsureSuccessStatusCode();
+		}
+		[Fact]
+		public async Task Delete_Item_NotFound()
+		{
+
+			//Act
+			var response = await _client.DeleteAsync("/api/DeleteItem/1");
+
+			//Assert
+			response.StatusCode.Should().Be(HttpStatusCode.NotFound);
 		}
 
 		public void Dispose()
