@@ -5,17 +5,18 @@ using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Json;
 using TestProject.Models;
+using TestProjectTests.Factories;
 using TestProjectTests.TestModels;
 
 namespace TestProjectTests.ControllerTests
 {
-	public class ApiTest : IDisposable
+    public class ApiTest : IDisposable
 	{
-		private CustomWebApplicationFactory _factory;
+		private DataServiceWebApplicationFactory _factory;
 		private HttpClient _client;
 		public ApiTest()
 		{
-			_factory = new CustomWebApplicationFactory();
+			_factory = new DataServiceWebApplicationFactory();
 			_client = _factory.CreateClient();
 		}
 		[Fact]

@@ -6,14 +6,15 @@ using Moq;
 using TestProject.Models;
 using TestProject.Services;
 
-namespace TestProjectTests.ControllerTests
+namespace TestProjectTests.Factories
 {
-	public class CustomWebApplicationFactory : WebApplicationFactory<Program>
+	public class DataServiceWebApplicationFactory : WebApplicationFactory<Program>
 	{
 		public Mock<IDataService<Item>> _fileService { get; }
-		public CustomWebApplicationFactory()
+		public DataServiceWebApplicationFactory()
 		{
 			_fileService = new Mock<IDataService<Item>>();
+
 		}
 		protected override void ConfigureWebHost(IWebHostBuilder builder)
 		{
