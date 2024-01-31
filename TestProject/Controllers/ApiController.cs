@@ -1,10 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.JsonWebTokens;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
-using TestProject.Data;
 using TestProject.Models;
 using TestProject.Services;
 
@@ -16,22 +11,12 @@ namespace TestProject.Controllers
 	public class ApiController : ControllerBase
 	{
 		private readonly IDataService<Item> _repo;
-		private SignInManager<ApplicationUser> _manager;
-		private UserManager<ApplicationUser> _userManager;
-		private IUserClaimsPrincipalFactory<ApplicationUser> _claimsFactory;
-		private KeyManager _keyManager;
+		private ITokenService _tokenService;
 
-		public ApiController(IDataService<Item> repo,
-			SignInManager<ApplicationUser> manager,
-			UserManager<ApplicationUser> userManager,
-			IUserClaimsPrincipalFactory<ApplicationUser> claimsFactory,
-			KeyManager keyManager)
+		public ApiController(IDataService<Item> repo, ITokenService tokenService)
 		{
 			_repo = repo;
-			_manager = manager;
-			_userManager = userManager;
-			_claimsFactory = claimsFactory;
-			_keyManager = keyManager;
+			_tokenService = tokenService;
 		}
 		///<summary> 
 		///API to get JWT token
@@ -39,39 +24,25 @@ namespace TestProject.Controllers
 		[HttpGet("token")]
 		[AllowAnonymous]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public async Task<ActionResult> token(string email, string password)
+		public ActionResult<string> token(string email, string password)
 		{
-			var user = await _userManager.FindByEmailAsync(email);
-			if (user != null)
+			var (token, error) = _tokenService.GenerateTokenAsync(email, password).Result;
+			if (error != null)
 			{
-				var result = await _manager.CheckPasswordSignInAsync(user, password, false);
-				if (result.Succeeded)
-				{
-					var principal = await _claimsFactory.CreateAsync(user);
-					var identity = principal.Identities.First();
-					identity.AddClaim(new Claim("amr", "pwd"));
-					identity.AddClaim(new Claim("method", "jwt"));
-					var handler = new JsonWebTokenHandler();
-					var key = new RsaSecurityKey(_keyManager.rsaKey);
-					var token = handler.CreateToken(new SecurityTokenDescriptor()
-					{
-						Issuer = "https://localhost:7258",
-						Subject = identity,
-						SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSha256),
-					});
-					return Ok(token);
-				}
+				return BadRequest(error);
 			}
-			return NotFound();
+			return Ok(token);
 		}
 
 		///<summary> 
 		///API to get all items
 		///</summary>
 		[HttpGet("GetItems")]
+		[Authorize(Roles = "Admin,User")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public ActionResult<List<Item>> GetItems([FromQuery] string t)
 		{
@@ -82,7 +53,9 @@ namespace TestProject.Controllers
 		///API to get all items with name longer than 5 characters
 		///</summary>
 		[HttpGet("GetFilteredItems")]
+		[Authorize(Roles = "Admin,User")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public ActionResult<List<Item>> GetFilteredItems([FromQuery] string t)
 		{
@@ -97,7 +70,9 @@ namespace TestProject.Controllers
 		///API to get item by id
 		///</summary>
 		[HttpGet("GetItemById/{id}")]
+		[Authorize(Roles = "Admin,User")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public ActionResult<Item> GetItemById([FromQuery] string t, int id)
@@ -114,8 +89,10 @@ namespace TestProject.Controllers
 		///API to create new item
 		///</summary>
 		[HttpPost("CreateItem")]
+		[Authorize(Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Item))]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public ActionResult<Item> CreateItem([FromQuery] string t, Item item)
 		{
@@ -132,9 +109,11 @@ namespace TestProject.Controllers
 		///API to edit existing item
 		///</summary>
 		[HttpPut("UpdateItem/{id}")]
+		[Authorize(Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public ActionResult<Item> UpdateItem([FromQuery] string t, int id, [FromBody] Item item)
 		{
@@ -157,8 +136,11 @@ namespace TestProject.Controllers
 		///API to delete item by id
 		///</summary>
 		[HttpDelete("DeleteItem/{id}")]
+		[Authorize(Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 		public ActionResult DeleteItem([FromQuery] string t, int id)
 		{
 			var result = _repo.Delete(id);

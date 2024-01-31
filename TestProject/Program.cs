@@ -94,6 +94,7 @@ public class Program
 		builder.Services.AddScoped<IProductService, ProductService>();
 		builder.Services.AddScoped<IDataRepository<Item>, ItemsRepository>();
 		builder.Services.AddScoped<IDataService<Item>, ItemsService>();
+		builder.Services.AddScoped<ITokenService, TokenService>();
 		builder.Services.AddControllersWithViews();
 
 		var app = builder.Build();
