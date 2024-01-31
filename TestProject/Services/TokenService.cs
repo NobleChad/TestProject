@@ -44,6 +44,7 @@ namespace TestProject.Services
 						{
 							Issuer = "https://localhost:7258",
 							Subject = identity,
+							Expires = DateTime.UtcNow.AddHours(1),
 							SigningCredentials = new SigningCredentials(key, SecurityAlgorithms.RsaSha256),
 						});
 						return (token, null); 
