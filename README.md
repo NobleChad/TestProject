@@ -38,7 +38,7 @@ The website supports both English and Ukrainian translations. If you notice any 
 This middleware redirects to NotFound.cshtml if the website encounters 404 exception.
 
 ## Swagger page
-This page contains default swagger documentation.
+This page contains API documentation. API uses JWT tokens system, so in order to use API you need an account and then fill your info in /api/token. Once you get a token you need to provide it to methods that you want to use.
 
 ## Home/Privacy pages
 Those pages do not have any particular use, but at least they are translated.
