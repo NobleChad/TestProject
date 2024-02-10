@@ -10,15 +10,11 @@ git clone https://github.com/NobleChad/TestProject
 ```
 cd TestProject
 ```
-## Install Dependencies
+## Apply Migrations
 Yes, we want to run this command again.
 ```
 cd TestProject
 ```
-```
-dotnet restore
-```
-## Apply Migrations
 Make sure you have EFCore Tools installed
 ```
 dotnet tool install --global dotnet-ef
