@@ -19,6 +19,13 @@ cd TestProject
 dotnet restore
 ```
 ## Apply Migrations
+Make sure you have EFCore Tools installed
+```
+dotnet tool install --global dotnet-ef
+```
+```
+dotnet ef migrations add Initial
+```
 ```
 dotnet ef database update
 ```
