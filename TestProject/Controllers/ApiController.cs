@@ -42,9 +42,10 @@ namespace TestProject.Controllers
 		[HttpGet("GetItems")]
 		[Authorize(Roles = "Admin,User")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public ActionResult<List<Item>> GetItems([FromQuery] string t)
+		public ActionResult<List<Item>> GetItems([FromQuery] string? t)
 		{
 			return Ok(_repo.GetAllItems().ToList());
 		}
@@ -55,9 +56,10 @@ namespace TestProject.Controllers
 		[HttpGet("GetFilteredItems")]
 		[Authorize(Roles = "Admin,User")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public ActionResult<List<Item>> GetFilteredItems([FromQuery] string t)
+		public ActionResult<List<Item>> GetFilteredItems([FromQuery] string? t)
 		{
 			var data = _repo.GetAllItems(a =>
 			{
@@ -72,10 +74,11 @@ namespace TestProject.Controllers
 		[HttpGet("GetItemById/{id}")]
 		[Authorize(Roles = "Admin,User")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public ActionResult<Item> GetItemById([FromQuery] string t, int id)
+		public ActionResult<Item> GetItemById([FromQuery] string? t, int id)
 		{
 			var item = _repo.GetItemById(id);
 			if (item != null)
@@ -92,9 +95,10 @@ namespace TestProject.Controllers
 		[Authorize(Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Item))]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public ActionResult<Item> CreateItem([FromQuery] string t, Item item)
+		public ActionResult<Item> CreateItem([FromQuery] string? t, Item item)
 		{
 			if (ModelState.IsValid && item != null)
 			{
@@ -112,10 +116,11 @@ namespace TestProject.Controllers
 		[Authorize(Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public ActionResult<Item> UpdateItem([FromQuery] string t, int id, [FromBody] Item item)
+		public ActionResult<Item> UpdateItem([FromQuery] string? t, int id, [FromBody] Item item)
 		{
 			if (!ModelState.IsValid || item == null)
 			{
@@ -138,10 +143,11 @@ namespace TestProject.Controllers
 		[HttpDelete("DeleteItem/{id}")]
 		[Authorize(Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
 		[ProducesResponseType(StatusCodes.Status403Forbidden)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesResponseType(StatusCodes.Status500InternalServerError)]
-		public ActionResult DeleteItem([FromQuery] string t, int id)
+		public ActionResult DeleteItem([FromQuery] string? t, int id)
 		{
 			var result = _repo.Delete(id);
 			if (result == null)
