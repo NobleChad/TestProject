@@ -39,7 +39,7 @@ namespace TestProject.Controllers
 		///<summary> 
 		///API to get all items
 		///</summary>
-		[HttpGet("GetItems")]
+		[HttpGet("getItems")]
 		[Authorize(Roles = "Admin,User")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -53,7 +53,7 @@ namespace TestProject.Controllers
 		///<summary> 
 		///API to get all items with name longer than 5 characters
 		///</summary>
-		[HttpGet("GetFilteredItems")]
+		[HttpGet("getFilteredItems")]
 		[Authorize(Roles = "Admin,User")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -71,7 +71,7 @@ namespace TestProject.Controllers
 		///<summary> 
 		///API to get item by id
 		///</summary>
-		[HttpGet("GetItemById/{id}")]
+		[HttpGet("getItemById/{id}")]
 		[Authorize(Roles = "Admin,User")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
@@ -91,7 +91,7 @@ namespace TestProject.Controllers
 		///<summary> 
 		///API to create new item
 		///</summary>
-		[HttpPost("CreateItem")]
+		[HttpPost("createItem")]
 		[Authorize(Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Item))]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -112,7 +112,7 @@ namespace TestProject.Controllers
 		///<summary> 
 		///API to edit existing item
 		///</summary>
-		[HttpPut("UpdateItem/{id}")]
+		[HttpPut("updateItem/{id}")]
 		[Authorize(Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -140,7 +140,7 @@ namespace TestProject.Controllers
 		///<summary> 
 		///API to delete item by id
 		///</summary>
-		[HttpDelete("DeleteItem/{id}")]
+		[HttpDelete("deleteItem/{id}")]
 		[Authorize(Roles = "Admin")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
